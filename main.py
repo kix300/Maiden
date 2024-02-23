@@ -44,3 +44,29 @@ if __name__ == "__main__":
 
     print(instruction)
     time.sleep(3)
+    for i in range(NUM_GUESSES):
+        for j in range(PROMPT_LIMIT):
+            print("Guess {}. Speak!".format(i + 1))
+            guess = recognize_speech_from_mic(recognizer, microphone)
+            if guess["transcription"]:
+                break
+            if not guess["success"]:
+                break
+            print("I didnt catch that. what did you say ?\n")
+
+            if guess["error"]:
+                print("ERROR: {}".format(guess["error"]))
+                break
+            print("You said: {}".format(guess["transcription"]))
+
+            guess_is_correct = guess["transcription"].lower() == word.lower()
+            user_has_more_attempts = i < NUM_GUESSES - 1
+
+            if guess_is_correct:
+                print("Correct! You win !'{}'".format(word))
+                break
+            elif user_has_more_attempts:
+                print("Incorrect. Try again. \n")
+            else:
+                print("Sorry, you lose!\nI was thinking of '{}'.".format(word))
+                break
